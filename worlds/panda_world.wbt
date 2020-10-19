@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.03812842342819167 0.980685634309985 -0.19183823911020145 0.3711676765842955
-  position 1.0018674752272085 0.5645975460512958 2.304176345257513
+  orientation -0.1748637149589742 0.9672095341572204 0.1841966292474401 1.695209485562457
+  position 2.171930484835147 1.4626641315058608 -0.5758308790704818
 }
 TexturedBackground {
 }
@@ -23,6 +23,15 @@ Robot {
             minStop -2.8973
             maxStop 2.8973
           }
+          device [
+            RotationalMotor {
+              name "joint1"
+              maxVelocity 2.175
+              minPosition -2.8973
+              maxPosition 2.8973
+              maxTorque 87
+            }
+          ]
           endPoint Solid {
             translation 0 0.333 0
             children [
@@ -32,6 +41,15 @@ Robot {
                   minStop -1.7628
                   maxStop 1.7628
                 }
+                device [
+                  RotationalMotor {
+                    name "joint2"
+                    maxVelocity 2.175
+                    minPosition -1.7628
+                    maxPosition 1.7628
+                    maxTorque 87
+                  }
+                ]
                 endPoint Solid {
                   rotation -1 0 0 1.5707996938995745
                   children [
@@ -41,6 +59,15 @@ Robot {
                         minStop -2.8973
                         maxStop 2.8973
                       }
+                      device [
+                        RotationalMotor {
+                          name "joint3"
+                          maxVelocity 2.175
+                          minPosition -2.8973
+                          maxPosition 2.8973
+                          maxTorque 87
+                        }
+                      ]
                       endPoint Solid {
                         translation 0 0 0.316
                         rotation 1 0 0 1.5707996938995745
@@ -53,9 +80,18 @@ Robot {
                               minStop -3.0718
                               maxStop -0.0698
                             }
+                            device [
+                              RotationalMotor {
+                                name "joint4"
+                                maxVelocity 2.175
+                                minPosition -3.0718
+                                maxPosition -0.0698
+                                maxTorque 87
+                              }
+                            ]
                             endPoint Solid {
                               translation 0.0825 0 0
-                              rotation 0.9987762530223677 -0.03497145003088227 -0.03497133227854752 1.5720241899584464
+                              rotation 0.9987762530223677 -0.03497145003088225 -0.0349713322785475 1.5720241899584464
                               children [
                                 HingeJoint {
                                   jointParameters HingeJointParameters {
@@ -64,6 +100,15 @@ Robot {
                                     minStop -2.8973
                                     maxStop 2.8973
                                   }
+                                  device [
+                                    RotationalMotor {
+                                      name "joint5"
+                                      maxVelocity 2.61
+                                      minPosition -2.8973
+                                      maxPosition 2.8973
+                                      maxTorque 12
+                                    }
+                                  ]
                                   endPoint Solid {
                                     translation -0.0825 0 -0.384
                                     rotation -1 0 0 1.5707996938995745
@@ -74,6 +119,15 @@ Robot {
                                           minStop -0.0175
                                           maxStop 3.7525
                                         }
+                                        device [
+                                          DEF joint6 RotationalMotor {
+                                            name "joint6"
+                                            maxVelocity 2.61
+                                            minPosition -0.0175
+                                            maxPosition 3.7525
+                                            maxTorque 12
+                                          }
+                                        ]
                                         endPoint Solid {
                                           rotation 1 0 0 1.5708003061004252
                                           children [
@@ -84,101 +138,105 @@ Robot {
                                                 minStop -2.8973
                                                 maxStop 2.8973
                                               }
+                                              device [
+                                                RotationalMotor {
+                                                  name "joint7"
+                                                  maxVelocity 2.61
+                                                  minPosition -2.8973
+                                                  maxPosition 2.8973
+                                                  maxTorque 12
+                                                }
+                                              ]
                                               endPoint Solid {
                                                 translation 0.088 0 0.107
                                                 rotation -1 0 0 1.5708003061004252
                                                 children [
-                                                  HingeJoint {
-                                                    jointParameters HingeJointParameters {
-                                                      axis 0 1 0
-                                                    }
-                                                    endPoint Solid {
-                                                      children [
-                                                        SliderJoint {
-                                                          jointParameters JointParameters {
-                                                            position 0.03
-                                                            axis 0 0 -1
-                                                          }
-                                                          endPoint Solid {
-                                                            translation 0 0 -0.03
-                                                            rotation 0 0 1 3.141592653589793
-                                                            children [
-                                                              DEF RightFinger Shape {
-                                                                appearance PBRAppearance {
-                                                                  baseColor 0.3 0.3 0.3
-                                                                  metalness 0
-                                                                }
-                                                                geometry Mesh {
-                                                                  url [
-                                                                    "/media/ddelehel/932ed56b-ad6e-4d5b-aa8e-f6fdada03cb1/ddelehel/catkin_ws/src/franka_ros/franka_description/meshes/visual/finger.dae"
-                                                                  ]
-                                                                }
+                                                  Solid {
+                                                    children [
+                                                      SliderJoint {
+                                                        jointParameters JointParameters {
+                                                          axis 0 0 -1
+                                                          maxStop 0.05
+                                                        }
+                                                        endPoint Solid {
+                                                          rotation 0 0 1 3.141592653589793
+                                                          children [
+                                                            DEF RightFinger Shape {
+                                                              appearance PBRAppearance {
+                                                                baseColor 0.3 0.3 0.3
+                                                                metalness 0
                                                               }
-                                                            ]
-                                                            name "RightFinger"
-                                                            boundingObject USE RightFinger
-                                                            physics Physics {
-                                                              mass 0.68
-                                                              centerOfMass [
-                                                                0 0 0
-                                                              ]
-                                                              inertiaMatrix [
-                                                                1 1 1
-                                                                0.1 0.1 0.1
-                                                              ]
-                                                            }
-                                                          }
-                                                        }
-                                                        SliderJoint {
-                                                          jointParameters JointParameters {
-                                                            position 0.03
-                                                          }
-                                                          endPoint Solid {
-                                                            translation 0 0 0.03
-                                                            rotation 1 0 0 3.141592653589793
-                                                            children [
-                                                              DEF LeftFinger Shape {
-                                                                appearance PBRAppearance {
-                                                                  baseColor 0.3 0.3 0.3
-                                                                  metalness 0
-                                                                }
-                                                                geometry Mesh {
-                                                                  url [
-                                                                    "/media/ddelehel/932ed56b-ad6e-4d5b-aa8e-f6fdada03cb1/ddelehel/catkin_ws/src/franka_ros/franka_description/meshes/visual/finger.dae"
-                                                                  ]
-                                                                }
+                                                              geometry Mesh {
+                                                                url [
+                                                                  "/media/ddelehel/932ed56b-ad6e-4d5b-aa8e-f6fdada03cb1/ddelehel/catkin_ws/src/franka_ros/franka_description/meshes/visual/finger.dae"
+                                                                ]
                                                               }
-                                                            ]
-                                                            name "LeftFinger"
-                                                            boundingObject USE LeftFinger
-                                                            physics Physics {
-                                                              mass 0.68
-                                                              centerOfMass [
-                                                                0 0 0
-                                                              ]
-                                                              inertiaMatrix [
-                                                                1 1 1
-                                                                0.1 0.1 0.1
-                                                              ]
                                                             }
-                                                          }
-                                                        }
-                                                        DEF Hand Shape {
-                                                          appearance PBRAppearance {
-                                                            baseColor 0.5 0.5 0.5
-                                                            metalness 0
-                                                          }
-                                                          geometry Mesh {
-                                                            url [
-                                                              "/media/ddelehel/932ed56b-ad6e-4d5b-aa8e-f6fdada03cb1/ddelehel/catkin_ws/src/franka_ros/franka_description/meshes/visual/hand.dae"
+                                                          ]
+                                                          name "RightFinger"
+                                                          boundingObject USE RightFinger
+                                                          physics Physics {
+                                                            mass 0.68
+                                                            centerOfMass [
+                                                              0 0 0
+                                                            ]
+                                                            inertiaMatrix [
+                                                              1 1 1
+                                                              0.1 0.1 0.1
                                                             ]
                                                           }
                                                         }
-                                                      ]
-                                                      name "hand"
-                                                      boundingObject USE Hand
-                                                      physics Physics {
                                                       }
+                                                      SliderJoint {
+                                                        jointParameters JointParameters {
+                                                          position 0.05
+                                                          maxStop 0.05
+                                                        }
+                                                        endPoint Solid {
+                                                          translation 0 0 0.05
+                                                          rotation 1 0 0 3.141592653589793
+                                                          children [
+                                                            DEF LeftFinger Shape {
+                                                              appearance PBRAppearance {
+                                                                baseColor 0.3 0.3 0.3
+                                                                metalness 0
+                                                              }
+                                                              geometry Mesh {
+                                                                url [
+                                                                  "/media/ddelehel/932ed56b-ad6e-4d5b-aa8e-f6fdada03cb1/ddelehel/catkin_ws/src/franka_ros/franka_description/meshes/visual/finger.dae"
+                                                                ]
+                                                              }
+                                                            }
+                                                          ]
+                                                          name "LeftFinger"
+                                                          boundingObject USE LeftFinger
+                                                          physics Physics {
+                                                            mass 0.68
+                                                            centerOfMass [
+                                                              0 0 0
+                                                            ]
+                                                            inertiaMatrix [
+                                                              1 1 1
+                                                              0.1 0.1 0.1
+                                                            ]
+                                                          }
+                                                        }
+                                                      }
+                                                      DEF Hand Shape {
+                                                        appearance PBRAppearance {
+                                                          baseColor 0.5 0.5 0.5
+                                                          metalness 0
+                                                        }
+                                                        geometry Mesh {
+                                                          url [
+                                                            "/media/ddelehel/932ed56b-ad6e-4d5b-aa8e-f6fdada03cb1/ddelehel/catkin_ws/src/franka_ros/franka_description/meshes/visual/hand.dae"
+                                                          ]
+                                                        }
+                                                      }
+                                                    ]
+                                                    name "hand(1)"
+                                                    boundingObject USE Hand
+                                                    physics Physics {
                                                     }
                                                   }
                                                   DEF Link7 Shape {
@@ -381,4 +439,6 @@ Robot {
       }
     }
   ]
+  physics Physics {
+  }
 }
