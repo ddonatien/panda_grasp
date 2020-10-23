@@ -1,0 +1,465 @@
+PROTO panda [
+  field SFVec3f    translation     0 0 0             # Is `Robot.translation`.
+  field SFRotation rotation        0 1 0 0           # Is `Robot.rotation`.
+  field SFString   name            "Panda"           # Is `Solid.name`.
+  field SFString   controller      "void"            # Is `Robot.controller`.
+  field MFString   controllerArgs  []                # Is `Robot.controllerArgs`.
+]
+{
+Robot {
+  translation IS translation
+  rotation IS rotation
+
+  children [
+    DEF Link0 Shape {
+      appearance PBRAppearance {
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "/opt/ros/melodic/share/franka_description/meshes/visual/link0.dae"
+        ]
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 1 0
+        minStop -2.8973
+        maxStop 2.8973
+      }
+      device [
+        RotationalMotor {
+          name "panda_joint1"
+          maxVelocity 2.175
+          minPosition -2.8973
+          maxPosition 2.8973
+          maxTorque 87
+        }
+        PositionSensor {
+          name "panda_joint1_sensor"
+        }
+      ]
+      endPoint Solid {
+        translation 0 0.333 0
+        children [
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis 0 0 1
+              minStop -1.7628
+              maxStop 1.7628
+            }
+            device [
+              RotationalMotor {
+                name "panda_joint2"
+                maxVelocity 2.175
+                minPosition -1.7628
+                maxPosition 1.7628
+                maxTorque 87
+              }
+              PositionSensor {
+                name "panda_joint2_sensor"
+              }
+            ]
+            endPoint Solid {
+              rotation -1 0 0 1.5707996938995745
+              children [
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    axis 0 0 1
+                    minStop -2.8973
+                    maxStop 2.8973
+                  }
+                  device [
+                    RotationalMotor {
+                      name "panda_joint3"
+                      maxVelocity 2.175
+                      minPosition -2.8973
+                      maxPosition 2.8973
+                      maxTorque 87
+                    }
+                    PositionSensor {
+                      name "panda_joint3_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    translation 0 0 0.316
+                    rotation 1 0 0 1.5707996938995745
+                    children [
+                      HingeJoint {
+                        jointParameters HingeJointParameters {
+                          position 1.5
+                          axis 0 0 1
+                          anchor 0.0825 0 0
+                          minStop -3.0718
+                          maxStop -0.0698
+                        }
+                        device [
+                          RotationalMotor {
+                            name "panda_joint4"
+                            maxVelocity 2.175
+                            minPosition -3.0718
+                            maxPosition -0.0698
+                            maxTorque 87
+                          }
+                          PositionSensor {
+                            name "panda_joint4_sensor"
+                          }
+                        ]
+                        endPoint Solid {
+                          translation 0.0825 0 0
+                          rotation 1 0 0 1.5707996938995745
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                axis 0 0 1
+                                anchor -0.0825 0 0
+                                minStop -2.8973
+                                maxStop 2.8973
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "panda_joint5"
+                                  maxVelocity 2.61
+                                  minPosition -2.8973
+                                  maxPosition 2.8973
+                                  maxTorque 12
+                                }
+                                PositionSensor {
+                                  name "panda_joint5_sensor"
+                                }
+                              ]
+                              endPoint Solid {
+                                translation -0.0825 0 -0.384
+                                rotation -1 0 0 1.5707996938995745
+                                children [
+                                  HingeJoint {
+                                    jointParameters HingeJointParameters {
+                                      axis 0 0 1
+                                      minStop -0.0175
+                                      maxStop 3.7525
+                                    }
+                                    device [
+                                      DEF joint6 RotationalMotor {
+                                        name "panda_joint6"
+                                        maxVelocity 2.61
+                                        minPosition -0.0175
+                                        maxPosition 3.7525
+                                        maxTorque 12
+                                      }
+                                      PositionSensor {
+                                        name "panda_joint6_sensor"
+                                      }
+                                    ]
+                                    endPoint Solid {
+                                      rotation 1 0 0 1.5708003061004252
+                                      children [
+                                        HingeJoint {
+                                          jointParameters HingeJointParameters {
+                                            axis 0 0 1
+                                            anchor 0.088 0 0
+                                            minStop -2.8973
+                                            maxStop 2.8973
+                                          }
+                                          device [
+                                            RotationalMotor {
+                                              name "panda_joint7"
+                                              maxVelocity 2.61
+                                              minPosition -2.8973
+                                              maxPosition 2.8973
+                                              maxTorque 12
+                                            }
+                                            PositionSensor {
+                                              name "panda_joint7_sensor"
+                                            }
+                                          ]
+                                          endPoint Solid {
+                                            translation 0.088 0 0.148
+                                            rotation -1 0 0 1.5708003061004252
+                                            children [
+                                              Solid {
+                                                children [
+                                                  SliderJoint {
+                                                    jointParameters JointParameters {
+                                                      axis 0 0 -1
+                                                    }
+                                                    device [
+                                                      LinearMotor {
+                                                        name "panda_finger_joint2"
+                                                      }
+                                                      PositionSensor {
+                                                        name "panda_finger_joint2_sensor"
+                                                      }
+                                                    ]
+                                                    endPoint Solid {
+                                                      translation 0 0 -0.03
+                                                      rotation 0 0 1 3.141592653589793
+                                                      children [
+                                                        DEF RightFinger Shape {
+                                                          appearance PBRAppearance {
+                                                            baseColor 0.3 0.3 0.3
+                                                            metalness 0
+                                                          }
+                                                          geometry Mesh {
+                                                            url [
+                                                              "/opt/ros/melodic/share/franka_description/meshes/visual/finger.dae"
+                                                            ]
+                                                          }
+                                                        }
+                                                      ]
+                                                      name "RightFinger"
+                                                      boundingObject USE RightFinger
+                                                      physics Physics {
+                                                        mass 0.68
+                                                        centerOfMass [
+                                                          0 0 0
+                                                        ]
+                                                        inertiaMatrix [
+                                                          1 1 1
+                                                          0.1 0.1 0.1
+                                                        ]
+                                                      }
+                                                    }
+                                                  }
+                                                  SliderJoint {
+                                                    jointParameters JointParameters {
+                                                      position 0.03
+                                                    }
+                                                    device [
+                                                      LinearMotor {
+                                                        name "panda_finger_joint1"
+                                                      }
+                                                      PositionSensor {
+                                                        name "panda_finger_joint1_sensor"
+                                                      }
+                                                    ]
+                                                    endPoint Solid {
+                                                      translation 0 0 0.03
+                                                      rotation 1 0 0 3.141592653589793
+                                                      children [
+                                                        DEF LeftFinger Shape {
+                                                          appearance PBRAppearance {
+                                                            baseColor 0.3 0.3 0.3
+                                                            metalness 0
+                                                          }
+                                                          geometry Mesh {
+                                                            url [
+                                                              "/opt/ros/melodic/share/franka_description/meshes/visual/finger.dae"
+                                                            ]
+                                                          }
+                                                        }
+                                                      ]
+                                                      name "LeftFinger"
+                                                      boundingObject USE LeftFinger
+                                                      physics Physics {
+                                                        mass 0.68
+                                                        centerOfMass [
+                                                          0 0 0
+                                                        ]
+                                                        inertiaMatrix [
+                                                          1 1 1
+                                                          0.1 0.1 0.1
+                                                        ]
+                                                      }
+                                                    }
+                                                  }
+                                                  DEF Hand Shape {
+                                                    appearance PBRAppearance {
+                                                      baseColor 0.5 0.5 0.5
+                                                      metalness 0
+                                                    }
+                                                    geometry Mesh {
+                                                      url [
+                                                        "/opt/ros/melodic/share/franka_description/meshes/visual/hand.dae"
+                                                      ]
+                                                    }
+                                                  }
+                                               ]
+                                                name "panda_hand"
+                                                boundingObject USE Hand
+                                                physics Physics {
+                                                }
+                                              }
+                                              DEF Link7 Shape {
+                                                appearance PBRAppearance {
+                                                  metalness 0
+                                                }
+                                                geometry Mesh {
+                                                  url [
+                                                    "/opt/ros/melodic/share/franka_description/meshes/visual/link7.dae"
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                            name "link7"
+                                            boundingObject USE Link7
+                                            physics Physics {
+                                              mass 1.58
+                                              centerOfMass [
+                                                0 0 0
+                                              ]
+                                              inertiaMatrix [
+                                                1 1 1
+                                                0.7 0.7 0.7
+                                              ]
+                                            }
+                                          }
+                                        }
+                                        DEF Link6 Shape {
+                                          appearance PBRAppearance {
+                                            metalness 0
+                                          }
+                                          geometry Mesh {
+                                            url [
+                                              "/opt/ros/melodic/share/franka_description/meshes/visual/link6.dae"
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                      name "link6"
+                                      boundingObject USE Link6
+                                      physics Physics {
+                                        mass 1.47
+                                        centerOfMass [
+                                          0 0 0
+                                        ]
+                                        inertiaMatrix [
+                                          1 1 1
+                                          0.3 0.3 0.3
+                                        ]
+                                      }
+                                    }
+                                  }
+                                  DEF Link5 Shape {
+                                    appearance PBRAppearance {
+                                      metalness 0
+                                    }
+                                    geometry Mesh {
+                                      url [
+                                        "/opt/ros/melodic/share/franka_description/meshes/visual/link5.dae"
+                                      ]
+                                    }
+                                  }
+                                ]
+                                name "link5"
+                                boundingObject USE Link5
+                                physics Physics {
+                                  mass 3.5
+                                  centerOfMass [
+                                    0 0 0
+                                  ]
+                                  inertiaMatrix [
+                                    1 1 1
+                                    0.3 0.3 0.3
+                                  ]
+                                }
+                              }
+                            }
+                            DEF Link4 Shape {
+                              appearance PBRAppearance {
+                                metalness 0
+                              }
+                              geometry Mesh {
+                                url [
+                                  "/opt/ros/melodic/share/franka_description/meshes/visual/link4.dae"
+                                ]
+                              }
+                            }
+                          ]
+                          name "link4"
+                          boundingObject USE Link4
+                          physics Physics {
+                            mass 2.43
+                            centerOfMass [
+                              0 0 0
+                            ]
+                            inertiaMatrix [
+                              1 1 1
+                              0.3 0.3 0.3
+                            ]
+                          }
+                        }
+                      }
+                      DEF Link3 Shape {
+                        appearance PBRAppearance {
+                          metalness 0
+                        }
+                        geometry Mesh {
+                          url [
+                            "/opt/ros/melodic/share/franka_description/meshes/visual/link3.dae"
+                          ]
+                        }
+                      }
+                    ]
+                    name "link3"
+                    boundingObject USE Link3
+                    physics Physics {
+                      mass 2.38
+                      centerOfMass [
+                        0 0 0
+                      ]
+                      inertiaMatrix [
+                        1 1 1
+                        0.3 0.3 0.3
+                      ]
+                    }
+                  }
+                }
+                DEF Link2 Shape {
+                  appearance PBRAppearance {
+                    metalness 0
+                  }
+                  geometry Mesh {
+                    url [
+                      "/opt/ros/melodic/share/franka_description/meshes/visual/link2.dae"
+                    ]
+                  }
+                }
+              ]
+              name "link2"
+              boundingObject USE Link2
+              physics Physics {
+                mass 2.36
+                centerOfMass [
+                  0 0 0
+                ]
+                inertiaMatrix [
+                  1 1 1
+                  0.3 0.3 0.3
+                ]
+              }
+            }
+          }
+          DEF Link1 Shape {
+            appearance PBRAppearance {
+              metalness 0
+            }
+            geometry Mesh {
+              url [
+                "/opt/ros/melodic/share/franka_description/meshes/visual/link1.dae"
+              ]
+            }
+          }
+        ]
+        name "link1"
+        boundingObject USE Link1
+        physics Physics {
+          mass 2.34
+          centerOfMass [
+            0 0 0
+          ]
+          inertiaMatrix [
+            1 1 1
+            0.3 0.3 0.3
+          ]
+        }
+      }
+    }
+  ]
+  name IS name
+  model "Franka Emika Panda"
+  boundingObject USE Link0
+  controller "panda_control"
+  controller IS controller
+  controllerArgs IS controllerArgs
+}
+}
