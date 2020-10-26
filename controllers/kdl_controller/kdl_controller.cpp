@@ -4,9 +4,6 @@
 // Author:
 // Modifications:
 
-// You may need to add webots include files such as
-// <webots/DistanceSensor.hpp>, <webots/Motor.hpp>, etc.
-// and/or to add some other includes
 #include <webots/Robot.hpp>
 #include <webots/Motor.hpp>
 #include <webots/PositionSensor.hpp>
@@ -15,24 +12,282 @@
 #include <kdl/chainfksolverpos_recursive.hpp>
 #include <kdl/chainiksolvervel_pinv.hpp>
 #include <kdl/chainiksolverpos_nr_jl.hpp>
+#include <kdl/chainiksolverpos_lma.hpp>
 #include <kdl/frames_io.hpp>
 #include <unistd.h>
+#include <queue>
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
 using namespace KDL;
 
 
+class PandaArm {
+  public: PandaArm(Robot* robot, int timeStep, Frame baseFrame) {
+    this->baseFrame = baseFrame;
+    //  // join1
+    // chain.addSegment(Segment(Joint(Joint::RotY),
+    //   Frame(Rotation::RPY(0.0,0.0,0.0), Vector(0.0, 0.333, 0.0))));
+    // // joint2
+    // chain.addSegment(Segment(Joint(Joint::RotZ),
+    //   Frame(Rotation::RPY(0.0,0.0,0.0), Vector(0.0, 0.0, 0.0))));
+    // // joint3
+    // chain.addSegment(Segment(Joint(Joint::RotZ),
+    //   Frame(Rotation::RPY(-M_PI/2,0.0,0.0), Vector(0.0, 0.316, 0.0))));
+    // // joint4
+    // chain.addSegment(Segment(Joint(Joint::RotZ),
+    //   Frame(Rotation::RPY(M_PI/2,0.0,0.0), Vector(0.0825, 0.0, 0.0))));
+    // // joint5
+    // chain.addSegment(Segment(Joint(Joint::RotZ),
+    //   Frame(Rotation::RPY(M_PI/2,0.0,0.0), Vector(-0.0825, 0.384, 0.0))));
+    // // joint6
+    // chain.addSegment(Segment(Joint(Joint::RotZ),
+    //   Frame(Rotation::RPY(-M_PI/2,0.0,0.0), Vector(0.0, 0.0, 0.0))));
+    // // joint7
+    // chain.addSegment(Segment(Joint(Joint::RotZ),
+    //   Frame(Rotation::RPY(M_PI/2,0.0,0.0), Vector(0.0, 0.088, 0.0))));
+    // join1
+    this->chain.addSegment(Segment(Joint(Joint::RotZ),
+      Frame::DH_Craig1989(0., 0.0, 0.333, 0.0)));
+    // joint2
+    this->chain.addSegment(Segment(Joint(Joint::RotZ),
+      Frame::DH_Craig1989(0.0, -M_PI/2, 0.0, 0.0)));
+    // joint3
+    this->chain.addSegment(Segment(Joint(Joint::RotZ),
+      Frame::DH_Craig1989(0.0, M_PI/2, 0.316, 0.0)));
+    // joint4
+    this->chain.addSegment(Segment(Joint(Joint::RotZ),
+      Frame::DH_Craig1989(-0.0825, M_PI/2, 0.0, 0.0)));
+    // joint5
+    this->chain.addSegment(Segment(Joint(Joint::RotZ),
+      Frame::DH_Craig1989(0.0825, -M_PI/2, 0.384, 0.0)));
+    // joint6
+    this->chain.addSegment(Segment(Joint(Joint::RotZ),
+      Frame::DH_Craig1989(0.0, M_PI/2, 0.0, 0.0)));
+    // joint7
+    this->chain.addSegment(Segment(Joint(Joint::RotZ),
+      Frame::DH_Craig1989(-0.088, M_PI/2, 0.0, 0.0)));
+    // eef
+    this->chain.addSegment(Segment(Joint(Joint::None),
+      Frame::DH_Craig1989(0.0, 0.0, 0.207, 0.0)));
+      
+    this->fksolver = new ChainFkSolverPos_recursive(chain);
+    
+    for(unsigned i = 0; i < chain.getNrOfJoints(); i++) {
+      this->q_min(i) = min_pos[i];
+      this->q_max(i) = max_pos[i];
+      this->q_start(i) = init_pos[i];
+    }
+ 
+    for (std::string name: arm_joints) {
+      this->arm_motors.push_back(robot->getMotor(name));
+    }
 
-double SimplifyAngle(double angle)
-{
-    angle = std::fmod(angle, (2.0 * M_PI));
-    if( angle < -M_PI )
-        angle += (2.0 * M_PI);
-    else if( angle > M_PI )
-        angle -= (2.0 * M_PI);
-    return angle;
-}
+    for (std::string name: hand_joints) {
+      this->hand_motors.push_back(robot->getMotor(name));
+    }
+    
+    for (std::string name: arm_joints) {
+      this->arm_sensors.push_back(robot->getPositionSensor(name + "_sensor"));
+      this->arm_sensors.back()->enable(timeStep);
+    }
+
+    this->iksolver1v = new ChainIkSolverVel_pinv(this->chain);
+    this->iksolver1 = new ChainIkSolverPos_LMA(this->chain, 1E-3, 500, 1E-4);
+
+    SetQGoal(this->q_start);
+  }
+
+  public: JntArray GetJointPositions() {
+    JntArray pos(7);
+    pos(0) = 0.0;
+    for(unsigned i = 0; i < arm_sensors.size()-1; i++) {
+      pos(i+1) = arm_sensors[i]->getValue();
+    }
+    return pos;
+  }
+
+  public: void OpenJaws(/*float force*/) {
+    for(Motor* motor: hand_motors){
+      std::cout<<motor->getMaxPosition()<<std::endl;
+      std::cout<<motor->getMinPosition()<<std::endl;
+      // motor->setAvailableForce(force);
+      motor->setPosition(0.0);
+    }
+    return;
+  }
+
+  public: void CloseJaws(/*float force*/) {
+    for(Motor* motor: hand_motors){
+      std::cout<<motor->getMaxPosition()<<std::endl;
+      std::cout<<motor->getMinPosition()<<std::endl;
+      // motor->setAvailableForce(force);
+      motor->setPosition(-0.04);
+    }
+    return;
+  }
+
+  public: bool GetPose(Frame* cartpos,int segmentNr=-1){
+    KDL::JntArray jp = GetJointPositions();
+    bool ok = fksolver->JntToCart(jp, *cartpos, segmentNr);
+    std::cout<<"Cartpos"<<std::endl;
+    std::cout<<*cartpos<<std::endl;
+    *cartpos = this->baseFrame.Inverse()*(*cartpos);
+    return ok;
+  }
+
+  public: int GetDest(Frame FDest, JntArray q_start, JntArray* tmp) {
+    std::cout<<"GetDest"<<std::endl;
+    std::cout<<FDest<<std::endl;
+    std::cout<<baseFrame*FDest<<std::endl;
+    int code = iksolver1->CartToJnt(q_start, baseFrame*FDest, *tmp);
+    //std::cout<<*tmp(0)<<" "<<*tmp(1)<<" "<<*tmp(2)<<" "<<*tmp(3)<<" "<<*tmp(4)<<" "<<*tmp(5)<<" "<*<tmp(6)<<" "<<std::endl;
+    return code;
+  }
+
+  public: JntArray GetStartPos() {
+    return q_start;
+  }
+
+  public: bool IsMoving() {
+    return moving;
+  }
+
+  public: void Update(){
+    JntArray jp = GetJointPositions();
+    if(!Equal(jp, qGoal, 1e-1)){
+        // std::cout<<"Moving"<<std::endl;
+        // std::cout<<jp(0)<<" "<<jp(1)<<" "<<jp(2)<<" "<<jp(3)<<" "<<jp(4)<<" "<<jp(5)<<" "<<jp(6)<<" "<<std::endl;
+        // std::cout<<qGoal(0)<<" "<<qGoal(1)<<" "<<qGoal(2)<<" "<<qGoal(3)<<" "<<qGoal(4)<<" "<<qGoal(5)<<" "<<qGoal(6)<<" "<<std::endl;
+        moving = true;
+    }
+    else {
+      moving = false;
+      std::pair<int, Frame*> goal = goals.front();
+      switch (goal.first)
+      {
+        case 0:
+          {
+            CloseJaws();
+            goals.pop();
+          }
+          break;
+
+        case 1:
+          {
+            OpenJaws();
+            goals.pop();
+          }
+          break;
+
+        case 2:
+          {
+            JntArray tmp(7);
+            KDL::JntArray q_init(this->chain.getNrOfJoints());
+            for(unsigned int i=0; i < chain.getNrOfJoints(); i++ ) {
+              q_init(i) = (q_max(i)-q_min(i))/2;
+            }
+            int code = GetDest(*(goal.second), jp, &tmp);
+            std::cout<<"Invese kinematics code : "<<code<<std::endl;
+            std::cout<<tmp(0)<<" "<<tmp(1)<<" "<<tmp(2)<<" "<<tmp(3)<<" "<<tmp(4)<<" "<<tmp(5)<<" "<<tmp(6)<<" "<<tmp(6)<<" "<<std::endl;
+            SetQGoal(tmp);
+            goals.pop();
+          }
+          break;
+  
+        default:
+          break;
+      }
+    }
+  }
+
+  private: void SetQGoal(JntArray q) {
+    qGoal = JntArray(7);
+    qGoal(0) = 0.0;
+    for(unsigned i = 0; i < 7; i++) {
+      arm_motors[i]->setPosition(q(i));
+      if (i<6) qGoal(i+1) = q(i);
+    }
+    moving = true;
+  }
+
+  public: void AddGoal(int nature, Frame* dest) {
+    goals.push(std::pair<int, Frame*>(nature, dest));
+  }
+
+  private:
+    bool moving = false;
+    ChainFkSolverPos_recursive *fksolver;
+    ChainIkSolverVel_pinv *iksolver1v;
+    ChainIkSolverPos_LMA *iksolver1;
+    KDL::Frame baseFrame;
+    std::vector<Motor*> arm_motors;
+    std::vector<Motor*> hand_motors;
+    std::vector<PositionSensor*> arm_sensors;
+    std::queue<std::pair<int, Frame*>> goals;
+    Chain chain; 
+    JntArray qGoal = *(new JntArray(7));
+    JntArray q_min = *(new JntArray(7));
+    JntArray q_max = *(new JntArray(7));
+    JntArray q_start = *(new JntArray(7));
+    std::string arm_joints[7] = {
+      "panda_joint1",
+      "panda_joint2",
+      "panda_joint3",
+      "panda_joint4",
+      "panda_joint5",
+      "panda_joint6",
+      "panda_joint7"
+    };
+    std::string hand_joints[2] = {
+      "panda_finger_joint1",
+      "panda_finger_joint2"
+    };
+    double min_pos[7] = {
+      -2.8973,
+      -1.7628,
+      -2.8973,
+      0.0698,
+      -2.8973,
+      -3.7525,
+      -2.8973
+    };
+    double max_pos[7] = {
+      2.8973,
+      1.7628,
+      2.8973,
+      3.0718,
+      2.8973,
+      0.0175,
+      2.8973
+    };
+    double init_pos[7] = {
+      -1.19,
+      -0.07,
+      -0.75,
+      1.63,
+      -1.16,
+      -2.1,
+      2
+    };
+    //double init_pos[7] = {
+    //  0.0,
+    //  0.0,
+    //  0.0,
+    //  M_PI/4,
+    //  M_PI/4,
+    //  0.,
+    //  0.0
+    //};
+    double SimplifyAngle(double angle) {
+        angle = std::fmod(angle, (2.0 * M_PI));
+        if( angle < -M_PI )
+            angle += (2.0 * M_PI);
+        else if( angle > M_PI )
+            angle -= (2.0 * M_PI);
+        return angle;
+    };
+};
 
 // This is the main program of your controller.
 // It creates an instance of your Robot instance, launches its
@@ -44,148 +299,88 @@ double SimplifyAngle(double angle)
 int main(int argc, char **argv) {
   // create the Robot instance.
   Robot *robot = new Robot();
-
   // get the time step of the current world.
   int timeStep = (int)robot->getBasicTimeStep();
 
-  std::string arm_joints[] = {
-    "panda_joint1",
-    "panda_joint2",
-    "panda_joint3",
-    "panda_joint4",
-    "panda_joint5",
-    "panda_joint6",
-    "panda_joint7"
-  };
-
-  std::string hand_joints[] = {
-    "panda_finger_joint1",
-    "panda_finger_joint2",
-  };
-
-  
-  double min_pos[] = {
-    -2.8973,
-    -1.7628,
-    -2.8973,
-    -3.0718,
-    -2.8973,
-    -0.0175,
-    -2.8973
-  };
-   
-  double max_pos[] = {
-    2.8973,
-    1.7628,
-    2.8973,
-    -0.0698,
-    2.8973,
-    3.7525,
-    2.8973
-  };
-
-  
-  // Simple robot arm with two segments.
-  Chain chain;
-  // join1
-  chain.addSegment(Segment(Joint(Joint::RotY),
-    Frame(Rotation::RPY(0.0,0.0,0.0), Vector(0.0, 0.0, 0.0))));
-  // joint2
-  chain.addSegment(Segment(Joint(Joint::RotZ),
-    Frame(Rotation::RPY(0.0,0.0,0.0), Vector(0.0, 0.333,0.0))));
-  // joint3
-  chain.addSegment(Segment(Joint(Joint::RotZ),
-    Frame(Rotation::RPY(-M_PI/2,0.0,0.0), Vector(0.0, 0.0,0.0))));
-  // joint4
-  chain.addSegment(Segment(Joint(Joint::RotZ),
-    Frame(Rotation::RPY(M_PI/2,0.0,0.0), Vector(0.0825, 0.0, 0.316))));
-  // joint5
-  chain.addSegment(Segment(Joint(Joint::RotZ),
-    Frame(Rotation::RPY(M_PI/2,0.0,0.0), Vector(0.0, 0.0, 0.0))));
-  // joint6
-  chain.addSegment(Segment(Joint(Joint::RotZ),
-    Frame(Rotation::RPY(-M_PI/2,0.0,0.0), Vector(-0.0825, 0.0, -0.384))));
-  // joint7
-  chain.addSegment(Segment(Joint(Joint::RotZ),
-    Frame(Rotation::RPY(M_PI/2,0.0,0.0), Vector(0.088, 0.0, 0.0))));
- 
-  // Create solver based on kinematic chain
-  ChainFkSolverPos_recursive fksolver = ChainFkSolverPos_recursive(chain);
- 
-  JntArray q_min(chain.getNrOfJoints());
-  JntArray q_max(chain.getNrOfJoints());
-
-  for(unsigned i = 0; i < chain.getNrOfJoints(); i++) {
-    q_min(i) = min_pos[i];
-    q_max(i) = max_pos[i];
-  }
- 
-  std::vector<Motor*> arm_motors;
-  for (std::string name: arm_joints) {
-    arm_motors.push_back(robot->getMotor(name));
-  }
-
-  std::vector<Motor*> hand_motors;
-  for (std::string name: hand_joints) {
-    hand_motors.push_back(robot->getMotor(name));
-  }
-  
-  // Create the frame that will contain the results
   KDL::Frame cartpos;
-  
-  KDL::JntArray jointpositions = JntArray(chain.getNrOfJoints());
-  
-  std::cout<<"Aaaah"<<std::endl;  
-  std::vector<PositionSensor*> arm_sensors;
-  for (std::string name: hand_joints) {
-    arm_sensors.push_back(robot->getPositionSensor(name + "_sensor"));
-    robot->getPositionSensor(name + "_sensor")->enable(1000);
-  }
   robot->step(timeStep);
-  std::cout<<"Aaaah"<<std::endl;
-  usleep(1000);
-  std::cout<<"bbbb"<<std::endl;
-  for(unsigned i = 0; i < chain.getNrOfJoints(); i++) {
-    std::cout<<arm_sensors[i]->getValue()<<std::endl;
-    jointpositions(i) = arm_sensors[i]->getValue();
-  }
-  std::cout<<"Aaaah"<<std::endl;
- 
-  // Calculate forward position kinematics
-  bool kinematics_status = fksolver.JntToCart(jointpositions, cartpos);
-  std::cout << kinematics_status <<std::endl;
-  std::cout << cartpos <<std::endl;
- 
-  // Vector tmp(0.0, 0.0, 0.0);
-  // Vector tr = cartpos * tmp;
-  // std::cout << tr << std::endl;
-  ChainIkSolverVel_pinv iksolver1v(chain);//Inverse velocity solver
-  ChainIkSolverPos_NR_JL iksolver1(chain, q_min, q_max, fksolver, iksolver1v, 100, 1e-6);
- 
-  //Creation of jntarrays:
-  JntArray q(chain.getNrOfJoints());
-  JntArray q_init(chain.getNrOfJoints());
+  Frame base1 =Frame(Rotation::RPY(0.0, M_PI, 0.0)*Rotation::RPY(-M_PI/2, 0.0, 0.0));
+  Frame base2 = Frame(Rotation::Quaternion(0.270598, 0.270597, 0.653281, 0.653282), Vector(-0.1, 0.5, 0.1)).Inverse();
+  PandaArm arm = PandaArm(robot, timeStep, base1*base2);
+   
+  // // Vector tmp(0.0, 0.0, 0.0);
+  // // Vector tr = cartpos * tmp;
+  // // std::cout << tr << std::endl;
+
+  // //Creation of jntarrays:
+  // JntArray q(chain.getNrOfJoints());
+  // JntArray q_init(chain.getNrOfJoints());
+  
+  // q_init = ::GetJointPositions(robot, arm_sensors);
  
   //Set destination frame
-  Frame F_dest = Frame(Vector(0.1, 0.9, 0.1));
-  int ret = iksolver1.CartToJnt(q_init, F_dest, q);
-  std::cout<< ret <<std::endl;
+  //Frame F_dest = Frame(Rotation(-0.76504, 0.209616, 0.608912, 0.435161, 0.865273, 0.248872, -0.474707, 0.455372, -0.753185)
+  //                 ,Vector(0.367334, 0.399661, 0.611311));
+  //arm.AddGoal(2, &F_dest);
 
 
-  // Main loop:
+  // Main loop:è
   // - perform simulation steps until Webots is stopping the controller
-  while (robot->step(timeStep) != -1 && ret > -5 ) {
-    // Read the sensors:
-    // Enter here functions to read sensor data, like:
-    //  double val = ds->getValue();
-
-    // Process sensor data here.
-
-    // Enter here functions to send actuator commands, like:
-    for(unsigned i = 0; i < chain.getNrOfJoints(); i++) {
-      arm_motors[i]->setPosition(::SimplifyAngle(q(i)));
+  // bool close = true;
+  // bool open = false;
+  int u = 0;
+  while (robot->step(timeStep) != -1) {
+    arm.Update();
+    if(!arm.IsMoving()){
+      u++;
+      if(!(u % 1)){
+    
+      // KDL::Frame effpos0;
+      // std::cout<<"Link 0"<<std::endl;
+      // std::cout<<arm.GetPose(&effpos0, 0)<<std::endl;
+      // std::cout<<effpos0<<std::endl;
+      
+      // KDL::Frame effpos1;
+      // std::cout<<"Link 1"<<std::endl;
+      // std::cout<<arm.GetPose(&effpos1, 1)<<std::endl;
+      // std::cout<<effpos1<<std::endl;
+      
+      // KDL::Frame effpos2;
+      // std::cout<<"Link 2"<<std::endl;
+      // std::cout<<arm.GetPose(&effpos2, 2)<<std::endl;
+      // std::cout<<effpos2<<std::endl;
+      
+      //KDL::Frame effpos3;
+      // std::cout<<"Link 3"<<std::endl;
+      // std::cout<<arm.GetPose(&effpos3, 3)<<std::endl;
+      // std::cout<<effpos3<<std::endl;
+      
+      // KDL::Frame effpos4;
+      // std::cout<<"Link 4"<<std::endl;
+      // std::cout<<arm.GetPose(&effpos4, 4)<<std::endl;
+      // std::cout<<effpos4<<std::endl;
+      
+      // KDL::Frame effpos5;
+      // std::cout<<"Link 5"<<std::endl;
+      // std::cout<<arm.GetPose(&effpos5, 5)<<std::endl;
+      // std::cout<<effpos5<<std::endl;
+      
+      // KDL::Frame effpos6;
+      // std::cout<<"Link 6"<<std::endl;
+      // std::cout<<arm.GetPose(&effpos6, 6)<<std::endl;
+      // std::cout<<effpos6<<std::endl;
+            
+      // KDL::Frame effpos7;
+      // std::cout<<"Link 7"<<std::endl;
+      // std::cout<<arm.GetPose(&effpos7, 7)<<std::endl;
+      // std::cout<<effpos7<<std::endl;
+                 
+      KDL::Frame effpos8;
+      std::cout<<"Link 8"<<std::endl;
+      std::cout<<arm.GetPose(&effpos8, 8)<<std::endl;
+      std::cout<<effpos8<<std::endl;
+      }
     }
-
   };
 
   // Enter here exit cleanup code.
@@ -193,4 +388,3 @@ int main(int argc, char **argv) {
   delete robot;
   return 0;
 }
-

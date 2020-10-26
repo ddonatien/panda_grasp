@@ -17,7 +17,7 @@ Robot {
       }
       geometry Mesh {
         url [
-          "/opt/ros/melodic/share/franka_description/meshes/visual/link0.dae"
+          "/opt/ros/noetic/share/franka_description/meshes/visual/link0.dae"
         ]
       }
     }
@@ -87,18 +87,17 @@ Robot {
                     children [
                       HingeJoint {
                         jointParameters HingeJointParameters {
-                          position 1.5
-                          axis 0 0 1
+                          axis 0 0 -1
                           anchor 0.0825 0 0
-                          minStop -3.0718
-                          maxStop -0.0698
+                          maxStop 3.0718
+                          minStop 0.0698
                         }
                         device [
                           RotationalMotor {
                             name "panda_joint4"
                             maxVelocity 2.175
-                            minPosition -3.0718
-                            maxPosition -0.0698
+                            maxPosition 3.0718
+                            minPosition 0.0698
                             maxTorque 87
                           }
                           PositionSensor {
@@ -111,7 +110,7 @@ Robot {
                           children [
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                axis 0 0 1
+                                axis 0 0 -1
                                 anchor -0.0825 0 0
                                 minStop -2.8973
                                 maxStop 2.8973
@@ -134,16 +133,16 @@ Robot {
                                 children [
                                   HingeJoint {
                                     jointParameters HingeJointParameters {
-                                      axis 0 0 1
-                                      minStop -0.0175
-                                      maxStop 3.7525
+                                      axis 0 0 -1
+                                      maxStop 0.0175
+                                      minStop -3.7525
                                     }
                                     device [
                                       DEF joint6 RotationalMotor {
                                         name "panda_joint6"
                                         maxVelocity 2.61
-                                        minPosition -0.0175
-                                        maxPosition 3.7525
+                                        mawPosition 0.0175
+                                        minPosition -3.7525
                                         maxTorque 12
                                       }
                                       PositionSensor {
@@ -173,26 +172,30 @@ Robot {
                                             }
                                           ]
                                           endPoint Solid {
-                                            translation 0.088 0 0.148
-                                            rotation -1 0 0 1.5708003061004252
+                                            translation 0.088 0 0
+                                            rotation -1 0 0 -1.5707996938995747
                                             children [
                                               Solid {
+                                                translation 0 0.105 0
+                                                rotation 1 0 0 0
                                                 children [
                                                   SliderJoint {
                                                     jointParameters JointParameters {
                                                       axis 0 0 -1
+                                                      position 0.0
+                                                      minStop -0.04
+                                                      maxStop 0.0
                                                     }
                                                     device [
                                                       LinearMotor {
                                                         name "panda_finger_joint2"
-                                                      }
-                                                      PositionSensor {
-                                                        name "panda_finger_joint2_sensor"
+                                                        minPosition -0.04
+                                                        maxPosition 0.0
                                                       }
                                                     ]
                                                     endPoint Solid {
-                                                      translation 0 0 -0.03
-                                                      rotation 0 0 1 3.141592653589793
+                                                      translation 0 0.06 -0.04
+                                                      rotation 0 0 1 0
                                                       children [
                                                         DEF RightFinger Shape {
                                                           appearance PBRAppearance {
@@ -201,7 +204,7 @@ Robot {
                                                           }
                                                           geometry Mesh {
                                                             url [
-                                                              "/opt/ros/melodic/share/franka_description/meshes/visual/finger.dae"
+                                                              "/opt/ros/noetic/share/franka_description/meshes/visual/finger.dae"
                                                             ]
                                                           }
                                                         }
@@ -222,19 +225,20 @@ Robot {
                                                   }
                                                   SliderJoint {
                                                     jointParameters JointParameters {
-                                                      position 0.03
+                                                      position 0.0
+                                                      minStop -0.04
+                                                      maxStop 0.0
                                                     }
                                                     device [
                                                       LinearMotor {
                                                         name "panda_finger_joint1"
-                                                      }
-                                                      PositionSensor {
-                                                        name "panda_finger_joint1_sensor"
+                                                        minPosition -0.04
+                                                        maxPosition 0.0
                                                       }
                                                     ]
                                                     endPoint Solid {
-                                                      translation 0 0 0.03
-                                                      rotation 1 0 0 3.141592653589793
+                                                      translation 0 0.06 0.04
+                                                      rotation 0 1 0 3.141592653589793
                                                       children [
                                                         DEF LeftFinger Shape {
                                                           appearance PBRAppearance {
@@ -243,7 +247,7 @@ Robot {
                                                           }
                                                           geometry Mesh {
                                                             url [
-                                                              "/opt/ros/melodic/share/franka_description/meshes/visual/finger.dae"
+                                                              "/opt/ros/noetic/share/franka_description/meshes/visual/finger.dae"
                                                             ]
                                                           }
                                                         }
@@ -269,11 +273,11 @@ Robot {
                                                     }
                                                     geometry Mesh {
                                                       url [
-                                                        "/opt/ros/melodic/share/franka_description/meshes/visual/hand.dae"
+                                                        "/opt/ros/noetic/share/franka_description/meshes/visual/hand.dae"
                                                       ]
                                                     }
                                                   }
-                                               ]
+                                                ]
                                                 name "panda_hand"
                                                 boundingObject USE Hand
                                                 physics Physics {
@@ -285,7 +289,7 @@ Robot {
                                                 }
                                                 geometry Mesh {
                                                   url [
-                                                    "/opt/ros/melodic/share/franka_description/meshes/visual/link7.dae"
+                                                    "/opt/ros/noetic/share/franka_description/meshes/visual/link7.dae"
                                                   ]
                                                 }
                                               }
@@ -310,7 +314,7 @@ Robot {
                                           }
                                           geometry Mesh {
                                             url [
-                                              "/opt/ros/melodic/share/franka_description/meshes/visual/link6.dae"
+                                              "/opt/ros/noetic/share/franka_description/meshes/visual/link6.dae"
                                             ]
                                           }
                                         }
@@ -335,7 +339,7 @@ Robot {
                                     }
                                     geometry Mesh {
                                       url [
-                                        "/opt/ros/melodic/share/franka_description/meshes/visual/link5.dae"
+                                        "/opt/ros/noetic/share/franka_description/meshes/visual/link5.dae"
                                       ]
                                     }
                                   }
@@ -360,7 +364,7 @@ Robot {
                               }
                               geometry Mesh {
                                 url [
-                                  "/opt/ros/melodic/share/franka_description/meshes/visual/link4.dae"
+                                  "/opt/ros/noetic/share/franka_description/meshes/visual/link4.dae"
                                 ]
                               }
                             }
@@ -385,7 +389,7 @@ Robot {
                         }
                         geometry Mesh {
                           url [
-                            "/opt/ros/melodic/share/franka_description/meshes/visual/link3.dae"
+                            "/opt/ros/noetic/share/franka_description/meshes/visual/link3.dae"
                           ]
                         }
                       }
@@ -410,7 +414,7 @@ Robot {
                   }
                   geometry Mesh {
                     url [
-                      "/opt/ros/melodic/share/franka_description/meshes/visual/link2.dae"
+                      "/opt/ros/noetic/share/franka_description/meshes/visual/link2.dae"
                     ]
                   }
                 }
@@ -435,7 +439,7 @@ Robot {
             }
             geometry Mesh {
               url [
-                "/opt/ros/melodic/share/franka_description/meshes/visual/link1.dae"
+                "/opt/ros/noetic/share/franka_description/meshes/visual/link1.dae"
               ]
             }
           }

@@ -47,8 +47,8 @@
 ###
 ### ---- Linked libraries ----
 ### if your program needs additional libraries:
-INCLUDE = -I"/opt/ros/melodic/include" -I"/usr/include/eigen3"
-LIBRARIES = -L"/opt/ros/melodic/lib/" -lorocos-kdl
+INCLUDE = -I"/opt/ros/noetic/include" -I"/usr/include/eigen3"
+LIBRARIES = -L"/opt/ros/noetic/lib/" -lorocos-kdl
 ###
 ### ---- Linking options ----
 ### if special linking flags are needed:
