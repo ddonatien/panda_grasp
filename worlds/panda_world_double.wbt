@@ -4,8 +4,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.5230624869287347 -0.8255828041844083 -0.21170419977632918 0.8756058613021489
-  position -3.0278355339990926 2.865358025652543 4.25192475817896
+  orientation 0.9569951793654236 0.22972221392781336 0.17716639382073798 4.9691520011002694
+  position 0.5107600169587071 3.9106155781143426 1.7434558827923834
   follow "floor"
 }
 TexturedBackground {
@@ -21,7 +21,7 @@ panda {
   translation 0.1 0.5 0.1
   rotation 0.6785997877224834 0.6785967877234219 0.2810849120718748 2.59356
   name "Panda2"
-  controller ""
+  controller "kdl_controller2"
 }
 Floor {
 }
@@ -41,6 +41,19 @@ Solid {
   physics Physics {
   }
 }
-CapScrew {
-  enablePhysics FALSE
+Solid {
+  translation 0 0.35 0.01
+  children [
+    DEF BODY Shape {
+      appearance PBRAppearance {
+        metalness 0
+      }
+      geometry Cylinder {
+        height 0.7
+        radius 0.2
+      }
+    }
+  ]
+  name "solid(1)"
+  boundingObject USE BODY
 }
