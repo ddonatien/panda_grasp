@@ -1,0 +1,52 @@
+#VRML_SIM R2020b utf8
+WorldInfo {
+  basicTimeStep 16
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation 0.644748046872795 -0.6034336963309971 -0.46922034289449355 4.510589898123728
+  position 1.4272315528487733 4.423671168206519 -0.5098471339123557
+  follow "floor"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+}
+Panda {
+  rotation 1 0 0 -1.5707996938995747
+  controller "<extern>"
+}
+Solid {
+  translation 0.6 0.7 -0.5
+  children [
+    DEF TABLE Shape {
+      appearance PBRAppearance {
+        baseColor 0.3 0.2 0.1
+        metalness 0
+      }
+      geometry Box {
+        size 0.2 1.4 0.5
+      }
+    }
+  ]
+  name "solid(1)"
+  boundingObject USE TABLE
+}
+Solid {
+  translation 0.61 1.425 -0.5
+  scale 0.5 0.5 0.5
+  children [
+    DEF BOX Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 0.1 0.1 0.1
+      }
+    }
+  ]
+  boundingObject USE BOX
+  physics Physics {
+  }
+}
