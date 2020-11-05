@@ -31,6 +31,26 @@
         <joint name="panda_2_joint7"/>
         <joint name="panda_2_joint8"/>
     </group>
+    <group name="panda_both_arms">
+        <joint name="panda_1_joint_base"/>
+        <joint name="panda_1_joint1"/>
+        <joint name="panda_1_joint2"/>
+        <joint name="panda_1_joint3"/>
+        <joint name="panda_1_joint4"/>
+        <joint name="panda_1_joint5"/>
+        <joint name="panda_1_joint6"/>
+        <joint name="panda_1_joint7"/>
+        <joint name="panda_1_joint8"/>
+        <joint name="panda_2_joint_base"/>
+        <joint name="panda_2_joint1"/>
+        <joint name="panda_2_joint2"/>
+        <joint name="panda_2_joint3"/>
+        <joint name="panda_2_joint4"/>
+        <joint name="panda_2_joint5"/>
+        <joint name="panda_2_joint6"/>
+        <joint name="panda_2_joint7"/>
+        <joint name="panda_2_joint8"/>
+    </group>
     <group name="hand_1">
         <joint name="panda_1_hand_joint"/>
         <joint name="panda_1_finger_joint1"/>

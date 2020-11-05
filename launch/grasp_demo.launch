@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="robot_control" pkg="double_panda" type="robot_control.py">
+  </node>
+</launch>
