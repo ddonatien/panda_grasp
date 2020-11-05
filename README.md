@@ -1,5 +1,40 @@
-# panda_grasp
+# double_panda
 
-This project depends on franka_description (part of [franka_ros](https://github.com/frankaemika/franka_ros)) and orocos KDL.
-If you have installed them with ros, check if the version for the visuals in protos/panda.proto is the same as yours (for the visuals) and check if the Makefiles in controllers/kdl_controller and controllers/kdl_controller2 link to the right path. The current ROS version is noetic.  
-If you have not installed these dependencies, it's up to you ton install them and link the files accordingly.
+This repository contains a simulation of a double armed robot with a gripping demonstration with ROS, MoveIt and WeBots. Both arms are franka emika's Panda.
+Special thanks to [@erdalpekel](https://github.com/erdalpekel/panda_simulation) whose urdf I reused.
+
+## How to launch the project
+
+```bash
+cd <catkin_ws>/src
+git clone https://github.com/ddonatien/double_panda.git
+cd ..
+catkin_make ## or catkin build
+```
+
+Open 3 terminals (from your catkin_ws) and follow the instructions in order :
+
+### Terminal 1
+```bash
+export WEBOTS_HOME=/usr/local/webots ## or your usual WEBOTS_HOME
+source devel/setup.bash
+roslaunch double_panda panda_world.launch
+```
+
+### Terminal 2
+```bash
+source devel/setup.bash
+roslaunch double_panda move_group.launch
+```
+
+### Terminal 3
+```bash
+source devel/setup.bash
+rosrun double_panda robot_control.py
+```
+
+You can also control the robot with Rviz using
+```bash
+source devel/setup.bash
+roslaunch double_panda moveit_rviz.launch
+```

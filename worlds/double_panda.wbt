@@ -4,8 +4,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.644748046872795 -0.6034336963309971 -0.46922034289449355 4.510589898123728
-  position 1.4272315528487733 4.423671168206519 -0.5098471339123557
+  orientation 0.9866222448615926 -0.15211264802908203 -0.05863691886390529 5.428232797610905
+  position 0.33941089888568354 5.6364710847036115 3.456250164276797
   follow "floor"
 }
 TexturedBackground {
@@ -35,6 +35,22 @@ Solid {
   boundingObject USE TABLE
 }
 Solid {
+  translation -0.6 0.55 0
+  children [
+    DEF TABLE2 Shape {
+      appearance PBRAppearance {
+        baseColor 0.3 0.2 0.1
+        metalness 0
+      }
+      geometry Box {
+        size 0.2 1.1 0.5
+      }
+    }
+  ]
+  name "solid(3)"
+  boundingObject USE TABLE2
+}
+Solid {
   translation 0.61 1.425 -0.5
   scale 0.5 0.5 0.5
   children [
@@ -47,6 +63,23 @@ Solid {
     }
   ]
   boundingObject USE BOX
+  physics Physics {
+  }
+}
+Solid {
+  translation -0.6 1.25 0
+  children [
+    DEF Cylinder Shape {
+      appearance PBRAppearance {
+      }
+      geometry Cylinder {
+        height 0.3
+        radius 0.02
+      }
+    }
+  ]
+  name "solid(2)"
+  boundingObject USE Cylinder
   physics Physics {
   }
 }
