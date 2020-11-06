@@ -1,0 +1,53 @@
+#VRML_SIM R2020b utf8
+WorldInfo {
+  basicTimeStep 16
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation 0.015719726652650756 0.9694105030411766 0.24494114964092742 2.936915735591976
+  position 0.7422291092244919 2.205651378777592 -2.6519502812218105
+  follow "floor"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+}
+PandaAngled {
+  rotation 1 0 0 -1.5707996938995747
+}
+Solid {
+  translation -0.2 1.03 -0.7
+  scale 0.6 0.6 0.6
+  children [
+    DEF cube Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 0.1 0.1 0.1
+      }
+    }
+  ]
+  name "Cube"
+  boundingObject USE cube
+  physics Physics {
+  }
+}
+Solid {
+  translation 0 1.15 -0.7
+  children [
+    DEF cylinder Shape {
+      appearance PBRAppearance {
+      }
+      geometry Cylinder {
+        height 0.3
+        radius 0.02
+      }
+    }
+  ]
+  name "Cylinder"
+  boundingObject USE cylinder
+  physics Physics {
+  }
+}

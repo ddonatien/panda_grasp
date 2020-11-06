@@ -2,13 +2,12 @@
 <launch>
   <arg name="auto-close" default="false" doc="Startup mode"/>
 
-  <param name="robot_description" command="$(find xacro)/xacro $(find double_panda)/robots/dual_panda_example.urdf.xacro"/>
+  <param name="robot_description" command="$(find xacro)/xacro $(find double_panda)/robots/dual_panda_angled.urdf.xacro"/>
   
   <include file="$(find webots_ros)/launch/webots.launch">
     <arg name="mode" value="realtime"/>
-    <arg name="world" value="$(find double_panda)/worlds/double_panda.wbt"/>
+    <arg name="world" value="$(find double_panda)/worlds/double_panda_angled.wbt"/>
   </include>
-
   
   <!-- Robot state publisher -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">

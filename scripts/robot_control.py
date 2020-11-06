@@ -391,22 +391,21 @@ def main():
     robot.open_hand_2()
 
     # One armed pick and place
-    robot.go_to_pose_goal_2([0.6, 0.5, 1.7], [pi, 0, -pi/4])
-    robot.go_to_pose_goal_2([0.6, 0.5, 1.53], [pi, 0, -pi/4])
+    robot.go_to_pose_goal_2([-0.3, 0.7, 1.15], [pi, 0, -pi/4])
+    robot.go_to_pose_goal_2([-0.2, 0.7, 1.13], [pi, 0, -pi/4])
     robot.close_hand_2()
-    robot.go_to_pose_goal_2([0.4, 0.7, 1.6], [pi, 0, -pi/4])
-    robot.go_to_pose_goal_2([-0.13, 1.0, 1.15], [pi, 0, 0])
+    robot.go_to_pose_goal_2([-0.25, 0.75, 1.4], [pi, 0, -pi/4])
+    robot.go_to_pose_goal_2([-0.3, 1.0, 1.2], [pi, 0, 0])
     robot.open_hand_2()
 
     # Two armed pick and move
-    robot.go_to_pose_goal_both([-0.6, -0.3, 1.22], [-0.6, 0.3, 1.3], [-pi/2, -pi/4, 0], [pi/2, pi/4, 0])
-
-    robot.go_to_pose_goal_both([-0.6, -0.1, 1.22], [-0.6, 0.1, 1.3], [-pi/2, -pi/4, 0],  [pi/2, pi/4, 0])
+    robot.go_to_pose_goal_both([0.15, 0.7, 1.15], [-0.15, 0.7, 1.29], [-pi/2, -pi/4, pi/2], [pi/2, pi/4, pi/2])
+    robot.go_to_pose_goal_both([0.1, 0.7, 1.15], [-0.1, 0.7, 1.25], [-pi/2, -pi/4, pi/2], [pi/2, pi/4, pi/2])
     robot.close_hand_2()
     robot.close_hand_1()
 
-    robot.go_to_pose_goal_both([-0.6, -0.1, 1.42], [-0.6, 0.1, 1.5], [-pi/2, -pi/4, 0],  [pi/2, pi/4, 0])
-    robot.go_to_pose_goal_both([-0.4, -0.1, 1.42], [-0.4, 0.1, 1.5], [-pi/2, -pi/4, 0],  [pi/2, pi/4, 0])
+    robot.go_to_pose_goal_both([0.1, 0.7, 1.35], [-0.1, 0.7, 1.45], [-pi/2, -pi/4, pi/2], [pi/2, pi/4, pi/2])
+    robot.go_to_pose_goal_both([0.1, 0.8, 1.35], [-0.1, 0.8, 1.45], [-pi/2, -pi/4, pi/2], [pi/2, pi/4, pi/2])
     robot.open_hand_2()
     robot.open_hand_1()
 

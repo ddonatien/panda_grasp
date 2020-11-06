@@ -30,7 +30,7 @@ roslaunch double_panda move_group.launch
 ### Terminal 3
 ```bash
 source devel/setup.bash
-rosrun double_panda robot_control.py
+roslaunch double_panda grasp_demo.launch
 ```
 
 You can also control the robot with Rviz using

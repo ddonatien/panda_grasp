@@ -155,34 +155,7 @@ panda_1_arm:
     - SPARS
     - SPARStwo
 panda_2_arm:
-  default_planner_config: RRTConnect
-  planner_configs:
-    - AnytimePathShortening
-    - SBL
-    - EST
-    - LBKPIECE
-    - BKPIECE
-    - KPIECE
-    - RRT
-    - RRTConnect
-    - RRTstar
-    - TRRT
-    - PRM
-    - PRMstar
-    - FMT
-    - BFMT
-    - PDST
-    - STRIDE
-    - BiTRRT
-    - LBTRRT
-    - BiEST
-    - ProjEST
-    - LazyPRM
-    - LazyPRMstar
-    - SPARS
-    - SPARStwo
-panda_both_arms:
-  default_planner_config: RRTConnect
+  default_planner_config: None
   planner_configs:
     - AnytimePathShortening
     - SBL
@@ -236,6 +209,33 @@ hand_1:
     - SPARS
     - SPARStwo
 hand_2:
+  default_planner_config: None
+  planner_configs:
+    - AnytimePathShortening
+    - SBL
+    - EST
+    - LBKPIECE
+    - BKPIECE
+    - KPIECE
+    - RRT
+    - RRTConnect
+    - RRTstar
+    - TRRT
+    - PRM
+    - PRMstar
+    - FMT
+    - BFMT
+    - PDST
+    - STRIDE
+    - BiTRRT
+    - LBTRRT
+    - BiEST
+    - ProjEST
+    - LazyPRM
+    - LazyPRMstar
+    - SPARS
+    - SPARStwo
+panda_both_arms:
   default_planner_config: None
   planner_configs:
     - AnytimePathShortening

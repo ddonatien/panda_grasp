@@ -2,7 +2,7 @@
 <launch>
   <arg name="paused" default="false"/>
   <arg name="gazebo_gui" default="true"/>
-  <arg name="urdf_path" default="/home/ddelehel/Documents/webots_projects/panda_grasp/misc/dual_panda.urdf"/>
+  <arg name="urdf_path" default="$(find double_panda)/robots/dual_panda_angled.urdf"/>
 
   <!-- startup simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">

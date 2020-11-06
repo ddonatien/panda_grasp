@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
+  <xacro:arg name="arm_id_1" default="panda_1" />
+  <xacro:arg name="arm_id_2" default="panda_2" />
+
+  <xacro:include filename="$(find double_panda)/robots/panda_arm.xacro"/>
+  <xacro:include filename="$(find double_panda)/robots/hand.xacro"/>
+
+  <!-- box shaped table as base for the 2 Pandas -->
+  <link name="table">
+    <visual>
+      <origin xyz="0 0.8 -0.5" rpy="0 0 0"/>
+      <geometry>
+        <box size="1.5 2 1" />
+      </geometry>
+      <material name="White">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0.8 -0.5" rpy="0 0 0"/>
+      <geometry>
+        <box size="1.5 2 1" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="table_joint_spine" type="fixed">
+    <parent link="spine"/>
+    <child link="table"/>
+    <origin rpy="0 0 0" xyz="0 0 1"/>
+  </joint>
+  <!-- box shaped table as base for the 2 Pandas -->
+  <link name="spine">
+    <visual>
+      <origin xyz="0 0 1.4" rpy="0 0 ${-pi/4}"/>
+      <geometry>
+        <box size="0.2 0.2 0.8" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.8 0.8 0.8 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 1.4" rpy="0 0 ${-pi/4}"/>
+      <geometry>
+        <box size="0.2 0.2 0.8" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- right arm with gripper -->
+  <xacro:panda_arm arm_id="$(arg arm_id_1)" connected_to="spine"  xyz="0.070710678118 0.070710678118 1.6" rpy="${-pi/4} ${pi/2} 0" safety_distance="0.03"/>
+  <xacro:hand ns="$(arg arm_id_1)" rpy="0 0 ${-pi/4}" connected_to="$(arg arm_id_1)_link8" safety_distance="0.03"/>
+
+  <!-- left arm with gripper -->
+  <xacro:panda_arm arm_id="$(arg arm_id_2)" connected_to="spine"  xyz="-0.070710678118 0.070710678118 1.6" rpy="${-3*pi/4} ${pi/2} 0" safety_distance="0.03"/>
+  <xacro:hand ns="$(arg arm_id_2)" rpy="0 0 ${-pi/4}" connected_to="$(arg arm_id_2)_link8" safety_distance="0.03"/>
+</robot>
