@@ -5,7 +5,7 @@ Special thanks to [@erdalpekel](https://github.com/erdalpekel/panda_simulation) 
 
 ## Demo
 
-https://youtu.be/yYpsR54nTUA
+https://youtu.be/XInSYrOIZGQ
 
 ## How to launch the project
 
@@ -34,7 +34,7 @@ roslaunch double_panda move_group.launch
 ### Terminal 3
 ```bash
 source devel/setup.bash
-rosrun double_panda robot_control.py
+roslaunch double_panda moveit_rviz.launch
 ```
 
 You can also control the robot with Rviz using
