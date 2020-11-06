@@ -3,6 +3,10 @@
 This repository contains a simulation of a double armed robot with a gripping demonstration with ROS, MoveIt and WeBots. Both arms are franka emika's Panda.
 Special thanks to [@erdalpekel](https://github.com/erdalpekel/panda_simulation) whose urdf I reused.
 
+## Demo
+
+https://youtu.be/yYpsR54nTUA
+
 ## How to launch the project
 
 ```bash
